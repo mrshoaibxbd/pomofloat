@@ -1,0 +1,3 @@
+pomofloat/*.py usr/lib/python3/dist-packages/pomofloat
+data/pomofloat.desktop usr/share/applications
+data/pomofloat.png usr/share/pixmaps

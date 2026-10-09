@@ -1,0 +1,12 @@
+Source: pomofloat
+Section: utils
+Priority: optional
+Maintainer: Shoaib Mahmud <me@shoaib.bd>
+Build-Depends: debhelper-compat (= 13), dh-python, python3-all
+Standards-Version: 4.6.2
+
+Package: pomofloat
+Architecture: all
+Depends: ${python3:Depends}, python3-pyside6.qtwidgets
+Description: lightweight always-on-top Pomodoro timer
+ Pomofloat is a small desktop Pomodoro timer with tray integration.

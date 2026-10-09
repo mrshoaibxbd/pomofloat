@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+%:
+	dh $@ --with python3
+
+override_dh_auto_build:
+	:
+
+override_dh_auto_install:
+	dh_auto_install
+	install -d debian/pomofloat/usr/bin
+	printf '#!/bin/sh\nexec python3 -m pomofloat "$$@"\n' > debian/pomofloat/usr/bin/pomofloat
+	chmod 755 debian/pomofloat/usr/bin/pomofloat
+	install -d debian/pomofloat/usr/share/applications
+	install -m 644 data/pomofloat.desktop debian/pomofloat/usr/share/applications/

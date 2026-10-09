@@ -1,0 +1,55 @@
+name: Release Debian package
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Debian build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            debhelper-compat dh-python python3-all python3-pyside6.qtwidgets
+      - name: Verify tag and project versions
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          test "$tag_version" = "2.1.4"
+          grep -Fq 'version = "2.1.4"' pyproject.toml
+          grep -Fq '__version__ = "2.1.4"' pomofloat/__init__.py
+          grep -Fq 'pomofloat (2.1.4-1)' debian/changelog
+      - name: Run tests and compilation checks
+        run: |
+          python3 -m pip install --break-system-packages pytest
+          python3 -m pytest -q
+          python3 -m compileall -q pomofloat tests main.py
+      - name: Build Debian package
+        run: dpkg-buildpackage -us -uc -b
+      - name: Inspect Debian package
+        run: |
+          package="../pomofloat_2.1.4-1_all.deb"
+          dpkg-deb --info "$package"
+          dpkg-deb --contents "$package"
+          dpkg-deb --contents "$package" | grep -F \
+            './usr/lib/python3/dist-packages/pomofloat/__main__.py'
+          dpkg-deb --contents "$package" | grep -F './usr/bin/pomofloat'
+          dpkg-deb --contents "$package" | grep -F \
+            './usr/share/applications/pomofloat.desktop'
+          dpkg-deb --contents "$package" | grep -F \
+            './usr/share/pixmaps/pomofloat.png'
+      - name: Create checksum
+        run: sha256sum ../pomofloat_2.1.4-1_all.deb > pomofloat_2.1.4-1_all.deb.sha256
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            ../pomofloat_2.1.4-1_all.deb
+            pomofloat_2.1.4-1_all.deb.sha256

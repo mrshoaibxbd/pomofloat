@@ -1,0 +1,6 @@
+pomofloat (2.1.4-1) unstable; urgency=medium
+
+  * Prepare the 2.1.4 release.
+  * Add a non-GUI version command and refreshed project documentation.
+
+ -- Shoaib Mahmud <me@shoaib.bd>  Sat, 10 Oct 2026 00:04:39 +0000

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Pomofloat
+Comment=Always-on-top Pomodoro timer
+Exec=pomofloat
+Icon=pomofloat
+Terminal=false
+Categories=Utility;Clock;

@@ -17,7 +17,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes \
-            debhelper-compat dh-python python3-all python3-pyside6.qtwidgets
+            debhelper-compat dh-python python3-all python3-venv
+      - name: Create Python test environment
+        run: |
+          python3 -m venv .ci-venv
+          .ci-venv/bin/python -m pip install --upgrade pip
+          .ci-venv/bin/python -m pip install -e . pytest
       - name: Verify tag and project versions
         run: |
           tag_version="${GITHUB_REF_NAME#v}"
@@ -27,9 +32,9 @@ jobs:
           grep -Fq 'pomofloat (2.1.4-1)' debian/changelog
       - name: Run tests and compilation checks
         run: |
-          python3 -m pip install --break-system-packages pytest
-          python3 -m pytest -q
-          python3 -m compileall -q pomofloat tests main.py
+          .ci-venv/bin/python -m pytest -q
+          .ci-venv/bin/python -m compileall -q pomofloat tests main.py
+          .ci-venv/bin/python -m pomofloat --version
       - name: Build Debian package
         run: dpkg-buildpackage -us -uc -b
       - name: Inspect Debian package

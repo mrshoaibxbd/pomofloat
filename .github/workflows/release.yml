@@ -17,7 +17,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes \
-            debhelper-compat dh-python python3-all python3-venv
+            build-essential debhelper-compat dh-python python3-all python3-venv
       - name: Create Python test environment
         run: |
           python3 -m venv .ci-venv
